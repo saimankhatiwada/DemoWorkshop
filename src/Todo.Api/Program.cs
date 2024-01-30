@@ -1,7 +1,12 @@
+using Todo.Api.Todos;
+using Todo.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDatabase(builder.Configuration);
 
 var app = builder.Build();
 
@@ -17,6 +22,8 @@ if (app.Environment.IsDevelopment())
 app.MapGet("/hello", () => {
     return "Hello World!";
 });
+
+app.MapTodo();
 
 app.Run();
 

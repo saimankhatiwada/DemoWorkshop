@@ -6,8 +6,7 @@ namespace Todo.Data;
 public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-    {
-        
+    {   
     }
 
     public DbSet<Todos.Todo> Todos { get; set; }

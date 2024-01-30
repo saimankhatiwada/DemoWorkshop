@@ -11,17 +11,20 @@ internal sealed class TodoRepository : ITodoRepository
     }
     public void Add(Todos.Todo todo)
     {
-        throw new NotImplementedException();
+        _dbContext.Todos.Add(todo);
+        _dbContext.SaveChanges();
     }
 
     public void Delete(Todos.Todo todo)
     {
-        throw new NotImplementedException();
+        _dbContext.Todos.Remove(todo);
+        _dbContext.SaveChanges();
     }
 
-    public Task<IReadOnlyList<Todos.Todo>> GetAllTodoAsync(CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<Todos.Todo>> GetAllTodoAsync(CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        IReadOnlyList<Todos.Todo?> todos = await _dbContext.Todos.ToListAsync();
+        return todos!;
     }
 
     public async Task<Todos.Todo?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
@@ -30,8 +33,16 @@ internal sealed class TodoRepository : ITodoRepository
         return todo!;
     }
 
-    public Task<bool> SetTodoCompletedAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<bool> SetTodoCompletedAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var todo = await _dbContext.Todos.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        if(todo is not null)
+        {
+            todo.IsCompleted = true;
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        return false;
     }
 }
